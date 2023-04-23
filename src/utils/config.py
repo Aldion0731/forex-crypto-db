@@ -4,13 +4,13 @@ from pathlib import Path
 from alembic.config import Config
 from dotenv import load_dotenv
 from envclasses import envclass, load_env
-from serde import Strict, serde
+from serde import serde
 from serde.toml import from_toml
 
 
 @dataclass
 @envclass
-@serde(type_check=Strict)
+@serde
 class DbInfo:
     db_user: str
     db_password: str
@@ -21,7 +21,7 @@ class DbInfo:
 
 @dataclass
 @envclass
-@serde(type_check=Strict)
+@serde
 class ProjectConfig:
     db_info: DbInfo
 

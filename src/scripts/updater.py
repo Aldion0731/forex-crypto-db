@@ -24,7 +24,7 @@ def run(project_config: ProjectConfig) -> None:
             historical_data = get_historical_data(
                 symbol, tf, start_date, datetime.now(pytz.timezone("Asia/Tokyo"))
             )
-            historical_data.to_csv(f"currency_data/{symbol.value}_{tf.value}")  # del
+            historical_data.to_csv(f"currency_data/{symbol.value}_{tf.value}")
 
             db_ready_historical_data = [
                 HistoricalDataTable(ticker_symbol_id, tf_id, **data_dict) for data_dict in convert_all_df_rows_to_dict(historical_data)  # type: ignore # noqa: E501
