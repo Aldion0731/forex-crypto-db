@@ -1,6 +1,8 @@
 import time
 from datetime import datetime
 
+import pytz
+
 from src.database.db_utilities.db_funcs import DatabaseConnection
 from src.database.models import HistoricalDataTable, TickerSymbols, TimeFrames
 from src.external_data.convert_data import convert_all_df_rows_to_dict
@@ -19,11 +21,13 @@ def run(project_config: ProjectConfig) -> None:
             tf_id = conn.get_timeframe_id(tf)
             start_date = conn.calculate_missing_data_start_time(symbol, tf)
 
-            historical_data = get_historical_data(symbol, tf, start_date, datetime.now())
+            historical_data = get_historical_data(
+                symbol, tf, start_date, datetime.now(pytz.timezone("Asia/Tokyo"))
+            )
             historical_data.to_csv(f"currency_data/{symbol.value}_{tf.value}")  # del
 
             db_ready_historical_data = [
-                HistoricalDataTable(ticker_symbol_id, tf_id, **data_dict) for data_dict in convert_all_df_rows_to_dict(historical_data)  # type: ignore
+                HistoricalDataTable(ticker_symbol_id, tf_id, **data_dict) for data_dict in convert_all_df_rows_to_dict(historical_data)  # type: ignore # noqa: E501
             ]
 
             conn.delete_final_historical_record(symbol, tf)
